@@ -6,13 +6,13 @@ import PackageDescription
 let package = Package(
     name: "screen-cast",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v15)
     ],
     products: [
-        .library(name: "AppCore", targets: ["AppCore"]),
+        .library(name: "AppCore", targets: ["AppCore"])
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.1"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.1")
     ],
     targets: [
         .target(
@@ -24,6 +24,6 @@ let package = Package(
         .testTarget(
             name: "AppCoreTests",
             dependencies: ["AppCore"]
-        ),
+        )
     ]
 )

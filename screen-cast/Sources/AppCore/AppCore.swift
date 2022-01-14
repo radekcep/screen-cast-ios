@@ -9,5 +9,4 @@ import Foundation
 import ComposableArchitecture
 
 public class AppCore {
-    
 }
