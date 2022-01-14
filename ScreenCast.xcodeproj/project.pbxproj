@@ -10,6 +10,7 @@
 		BF2EC679278F0760003ABFAF /* ScreenCastApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2EC678278F0760003ABFAF /* ScreenCastApp.swift */; };
 		BF2EC67B278F0760003ABFAF /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2EC67A278F0760003ABFAF /* RootView.swift */; };
 		BF2EC67D278F0761003ABFAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF2EC67C278F0761003ABFAF /* Assets.xcassets */; };
+		BF5206812791EE3E00BB3646 /* GoogleCastClient in Frameworks */ = {isa = PBXBuildFile; productRef = BF5206802791EE3E00BB3646 /* GoogleCastClient */; };
 		BFA7C9F227908B4B007F0680 /* AppCore in Frameworks */ = {isa = PBXBuildFile; productRef = BFA7C9F127908B4B007F0680 /* AppCore */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BFA7C9F227908B4B007F0680 /* AppCore in Frameworks */,
+				BF5206812791EE3E00BB3646 /* GoogleCastClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +83,7 @@
 			name = ScreenCast;
 			packageProductDependencies = (
 				BFA7C9F127908B4B007F0680 /* AppCore */,
+				BF5206802791EE3E00BB3646 /* GoogleCastClient */,
 			);
 			productName = ScreenCast;
 			productReference = BF2EC675278F0760003ABFAF /* ScreenCast.app */;
@@ -360,6 +363,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		BF5206802791EE3E00BB3646 /* GoogleCastClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GoogleCastClient;
+		};
 		BFA7C9F127908B4B007F0680 /* AppCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppCore;
