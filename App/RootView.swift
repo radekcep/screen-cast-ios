@@ -6,6 +6,7 @@
 //
 
 import AppCore
+import ComposableArchitecture
 import SwiftUI
 
 struct RootView: View {

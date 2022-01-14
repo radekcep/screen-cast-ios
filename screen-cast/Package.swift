@@ -5,17 +5,21 @@ import PackageDescription
 
 let package = Package(
     name: "screen-cast",
+    platforms: [
+        .iOS(.v15),
+    ],
     products: [
         .library(name: "AppCore", targets: ["AppCore"]),
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.1"),
     ],
     targets: [
         .target(
             name: "AppCore",
-            dependencies: []
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ]
         ),
         .testTarget(
             name: "AppCoreTests",
