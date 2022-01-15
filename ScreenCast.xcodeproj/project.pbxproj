@@ -21,6 +21,7 @@
 		BF2EC678278F0760003ABFAF /* ScreenCastApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCastApp.swift; sourceTree = "<group>"; };
 		BF2EC67A278F0760003ABFAF /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		BF2EC67C278F0761003ABFAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BFA65278279304520098C8DD /* ScreenCast-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ScreenCast-Info.plist"; sourceTree = "<group>"; };
 		BFA7C9EA2790841B007F0680 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		BFA7C9EB279084DE007F0680 /* screen-cast */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "screen-cast"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -57,13 +58,22 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		BFA652792793048D0098C8DD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BFA65278279304520098C8DD /* ScreenCast-Info.plist */,
+				BF09431527921B650057E48C /* ScreenCast.entitlements */,
+				BF2EC67C278F0761003ABFAF /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		BFA7C9E9279083C1007F0680 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				BF09431527921B650057E48C /* ScreenCast.entitlements */,
+				BFA652792793048D0098C8DD /* Resources */,
 				BF2EC678278F0760003ABFAF /* ScreenCastApp.swift */,
 				BF2EC67A278F0760003ABFAF /* RootView.swift */,
-				BF2EC67C278F0761003ABFAF /* Assets.xcassets */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -293,12 +303,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = App/ScreenCast.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App/Resources/ScreenCast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = QHXZM6SCHK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "App/Resources/ScreenCast-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -322,12 +333,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = App/ScreenCast.entitlements;
+				CODE_SIGN_ENTITLEMENTS = App/Resources/ScreenCast.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = QHXZM6SCHK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "App/Resources/ScreenCast-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
