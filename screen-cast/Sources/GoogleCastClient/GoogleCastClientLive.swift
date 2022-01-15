@@ -5,68 +5,45 @@
 //  Created by Radek Čep on 14.01.2022.
 //
 
+import Combine
 import ComposableArchitecture
 import Foundation
 import GoogleCast
 
 extension GoogleCastClient {
     public static var live: Self {
-       let delegate = LoggerDelegate()
+        var discoveryListener: GCKDiscoveryManagerListener?
 
         return .init(
             receivers: {
-                setupLogger(with: delegate)
-                GCKCastContext.setSharedInstanceWith(.init())
+                let discoveryCriteria = GCKDiscoveryCriteria(applicationID: kGCKDefaultMediaReceiverApplicationID)
+                let options = GCKCastOptions(discoveryCriteria: discoveryCriteria)
 
-                let manager = GCKCastContext.sharedInstance().discoveryManager
-                // GCKDiscoveryManager.initialize()
+                GCKCastContext.setSharedInstanceWith(options)
+                let discoveryManager = GCKCastContext.sharedInstance().discoveryManager
 
-                manager.add(DiscoveryManagerListener())
-                manager.startDiscovery()
+                return .run { subscriber in
+                    discoveryListener = DiscoveryManagerListener(
+                        didUpdateDeviceList: {
+                            let receivers = (0..<discoveryManager.deviceCount)
+                                .map(discoveryManager.device(at:))
+                                .map(GoogleCastReceiver.init)
 
-                return .none
+                            subscriber.send(.discovered(receivers: receivers))
+                        },
+                        didStartDiscovery: { _ in },
+                        didHaveDiscoveredDeviceWhenStartingDiscovery: { }
+                    )
+
+                    discoveryManager.add(discoveryListener!)
+                    discoveryManager.startDiscovery()
+
+                    return AnyCancellable {
+                        discoveryManager.remove(discoveryListener!)
+                        discoveryManager.stopDiscovery()
+                    }
+                }
             }
         )
-    }
-}
-
-private extension GoogleCastClient {
-    class DiscoveryManagerListener: NSObject, GCKDiscoveryManagerListener {
-        func didUpdateDeviceList() {
-            print(#function)
-        }
-
-        func didStartDiscovery(forDeviceCategory deviceCategory: String) {
-            print(#function)
-        }
-
-        func didHaveDiscoveredDeviceWhenStartingDiscovery() {
-            print(#function)
-        }
-    }
-}
-
-private extension GoogleCastClient {
-    class LoggerDelegate: NSObject, GCKLoggerDelegate {
-        deinit {
-            print("Oh no")
-        }
-
-        func logMessage(_ message: String, at _: GCKLoggerLevel, fromFunction function: String, location: String) {
-            print("\(location): \(function) - \(message)")
-        }
-    }
-
-    static func setupLogger(with delegate: GCKLoggerDelegate) {
-        let logFilter = GCKLoggerFilter()
-        let classesToLog = [
-            "GCKDeviceScanner", "GCKDeviceProvider", "GCKDiscoveryManager",
-            "GCKCastChannel", "GCKMediaControlChannel", "GCKUICastButton",
-            "GCKUIMediaController", "NSMutableDictionary"
-        ]
-
-        logFilter.setLoggingLevel(.verbose, forClasses: classesToLog)
-        GCKLogger.sharedInstance().filter = logFilter
-        GCKLogger.sharedInstance().delegate = delegate
     }
 }

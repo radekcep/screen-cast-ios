@@ -9,5 +9,12 @@ import ComposableArchitecture
 import Foundation
 
 public struct GoogleCastClient {
-    public var receivers: () -> Effect<[GoogleCastReceiver], GoogleCastError>
+    public enum Action: Equatable {
+        case discovered(receivers: [GoogleCastReceiver])
+    }
+
+    public enum Error: Swift.Error {
+    }
+
+    public var receivers: () -> Effect<Action, Error>
 }
