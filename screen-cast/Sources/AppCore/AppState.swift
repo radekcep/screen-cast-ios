@@ -10,7 +10,7 @@ import ComposableArchitecture
 import GoogleCastClient
 
 public struct AppState: Equatable {
-    var receivers: [GoogleCastReceiver]
+    public var receivers: [GoogleCastReceiver]
 
     public init(
         receivers: [GoogleCastReceiver] = []

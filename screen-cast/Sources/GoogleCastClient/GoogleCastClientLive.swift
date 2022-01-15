@@ -15,7 +15,7 @@ extension GoogleCastClient {
         var discoveryListener: GCKDiscoveryManagerListener?
 
         return .init(
-            receivers: {
+            startDiscovery: {
                 let discoveryCriteria = GCKDiscoveryCriteria(applicationID: kGCKDefaultMediaReceiverApplicationID)
                 let options = GCKCastOptions(discoveryCriteria: discoveryCriteria)
 

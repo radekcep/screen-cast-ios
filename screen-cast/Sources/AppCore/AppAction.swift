@@ -8,6 +8,12 @@
 import Foundation
 import GoogleCastClient
 
+public enum LifecycleAction {
+  case onAppear
+  case onDisappear
+}
+
 public enum AppAction {
     case googleCastClient(GoogleCastClient.Action)
+    case lifecycleAction(LifecycleAction)
 }

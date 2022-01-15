@@ -16,5 +16,5 @@ public struct GoogleCastClient {
     public enum Error: Swift.Error {
     }
 
-    public var receivers: () -> Effect<Action, Error>
+    public var startDiscovery: () -> Effect<Action, Never>
 }

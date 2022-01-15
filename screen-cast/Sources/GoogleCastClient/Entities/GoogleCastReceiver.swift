@@ -11,9 +11,12 @@ import GoogleCast
 public struct GoogleCastReceiver: Identifiable, Equatable {
     public let id: String
     public let name: String
-}
 
-extension GoogleCastReceiver {
+    public init(id: String, name: String) {
+        self.id = id
+        self.name = name
+    }
+
     init(gckDevice: GCKDevice) {
         id = gckDevice.uniqueID
         name = gckDevice.friendlyName

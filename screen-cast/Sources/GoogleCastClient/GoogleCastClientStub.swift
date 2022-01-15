@@ -10,7 +10,7 @@ import Foundation
 #if DEBUG
 extension GoogleCastClient {
     public static let stub: Self = .init(
-        receivers: { .none }
+        startDiscovery: { .none }
     )
 }
 #endif
