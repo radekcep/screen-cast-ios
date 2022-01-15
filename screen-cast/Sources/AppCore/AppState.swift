@@ -11,4 +11,10 @@ import GoogleCastClient
 
 public struct AppState: Equatable {
     var receivers: [GoogleCastReceiver]
+
+    public init(
+        receivers: [GoogleCastReceiver] = []
+    ) {
+        self.receivers = receivers
+    }
 }

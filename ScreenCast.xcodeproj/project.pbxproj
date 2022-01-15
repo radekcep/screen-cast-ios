@@ -11,6 +11,7 @@
 		BF2EC67B278F0760003ABFAF /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2EC67A278F0760003ABFAF /* RootView.swift */; };
 		BF2EC67D278F0761003ABFAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF2EC67C278F0761003ABFAF /* Assets.xcassets */; };
 		BF5206812791EE3E00BB3646 /* GoogleCastClient in Frameworks */ = {isa = PBXBuildFile; productRef = BF5206802791EE3E00BB3646 /* GoogleCastClient */; };
+		BFA652772792E3B50098C8DD /* AppView in Frameworks */ = {isa = PBXBuildFile; productRef = BFA652762792E3B50098C8DD /* AppView */; };
 		BFA7C9F227908B4B007F0680 /* AppCore in Frameworks */ = {isa = PBXBuildFile; productRef = BFA7C9F127908B4B007F0680 /* AppCore */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFA652772792E3B50098C8DD /* AppView in Frameworks */,
 				BFA7C9F227908B4B007F0680 /* AppCore in Frameworks */,
 				BF5206812791EE3E00BB3646 /* GoogleCastClient in Frameworks */,
 			);
@@ -86,6 +88,7 @@
 			packageProductDependencies = (
 				BFA7C9F127908B4B007F0680 /* AppCore */,
 				BF5206802791EE3E00BB3646 /* GoogleCastClient */,
+				BFA652762792E3B50098C8DD /* AppView */,
 			);
 			productName = ScreenCast;
 			productReference = BF2EC675278F0760003ABFAF /* ScreenCast.app */;
@@ -370,6 +373,10 @@
 		BF5206802791EE3E00BB3646 /* GoogleCastClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GoogleCastClient;
+		};
+		BFA652762792E3B50098C8DD /* AppView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppView;
 		};
 		BFA7C9F127908B4B007F0680 /* AppCore */ = {
 			isa = XCSwiftPackageProductDependency;

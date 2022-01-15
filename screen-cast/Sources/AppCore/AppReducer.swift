@@ -8,7 +8,7 @@
 import ComposableArchitecture
 import Foundation
 
-let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, environment in
+public let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, environment in
     switch action {
     default:
         return .none

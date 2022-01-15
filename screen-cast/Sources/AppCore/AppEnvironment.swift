@@ -8,6 +8,12 @@
 import Foundation
 import GoogleCastClient
 
-struct AppEnvironment {
-    var googleCastClient: GoogleCastClient
+public struct AppEnvironment {
+    public var googleCastClient: GoogleCastClient
+
+    public init(
+        googleCastClient: GoogleCastClient
+    ) {
+        self.googleCastClient = googleCastClient
+    }
 }

@@ -10,6 +10,7 @@ let package = Package(
     ],
     products: [
         .library(name: "AppCore", targets: ["AppCore"]),
+        .library(name: "AppView", targets: ["AppView"]),
         .library(name: "GoogleCastClient", targets: ["GoogleCastClient"])
     ],
     dependencies: [
@@ -20,12 +21,22 @@ let package = Package(
         .target(
             name: "AppCore",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "GoogleCastClient")
             ]
         ),
         .testTarget(
             name: "AppCoreTests",
             dependencies: ["AppCore"]
+        ),
+
+        // MARK: - AppView
+        .target(
+            name: "AppView",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "AppCore")
+            ]
         ),
 
         // MARK: - GoogleCastClient

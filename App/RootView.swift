@@ -6,24 +6,29 @@
 //
 
 import AppCore
+import AppView
 import ComposableArchitecture
 import GoogleCastClient
 import SwiftUI
 
-let client = GoogleCastClient.live
-
 struct RootView: View {
+    let store = Store(
+        initialState: AppState(),
+        reducer: appReducer,
+        environment: AppEnvironment(
+            googleCastClient: .live
+        )
+    )
+
     var body: some View {
-        Text("Hello, world!")
-            .padding()
-            .onAppear {
-                _ = client.receivers()
-            }
+        AppView(store: store)
     }
 }
 
+#if DEBUG
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         RootView()
     }
 }
+#endif
