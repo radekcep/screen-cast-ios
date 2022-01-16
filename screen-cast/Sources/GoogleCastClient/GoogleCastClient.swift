@@ -11,10 +11,32 @@ import Foundation
 public struct GoogleCastClient {
     public enum Action: Equatable {
         case discovered(receivers: [GoogleCastReceiver])
+        case sessionStarted(String)
+        case sessionEnded
     }
 
     public enum Error: Swift.Error {
+        case deviceUnavailable
+        case sessionInterrupted
+        case unableToStartSession
+        case sessionAlreadyInProgress
     }
 
     public var startDiscovery: () -> Effect<Action, Never>
+    public var startSession: (GoogleCastReceiver) -> Effect<Action, Error>
+}
+
+extension GoogleCastClient.Error: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .deviceUnavailable:
+            return "Device unavailable"
+        case .sessionInterrupted:
+            return "Session interrupted"
+        case .unableToStartSession:
+            return "Unable to start the session"
+        case .sessionAlreadyInProgress:
+            return "Another session is already in progress"
+        }
+    }
 }

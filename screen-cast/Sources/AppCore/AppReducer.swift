@@ -5,24 +5,12 @@
 //  Created by Radek Čep on 15.01.2022.
 //
 
+import Combine
 import ComposableArchitecture
 import Foundation
 import GoogleCastClient
 
-public let appReducer: Reducer<AppState, AppAction, AppEnvironment> = .combine(
-    lifeCycleReducer.pullback(
-        state: \.self,
-        action: /.`self`,
-        environment: { $0 }
-    ),
-    googleCastReducer.pullback(
-        state: \.receivers,
-        action: /AppAction.googleCastClient,
-        environment: { _ in () }
-    )
-)
-
-let lifeCycleReducer = Reducer<AppState, AppAction, AppEnvironment> { _, action, environment in
+public let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, environment in
     struct GoogleCastReceiversID: Hashable { }
 
     switch action {
@@ -34,16 +22,31 @@ let lifeCycleReducer = Reducer<AppState, AppAction, AppEnvironment> { _, action,
     case .lifecycleAction(.onDisappear):
         return .cancel(id: GoogleCastReceiversID())
 
-    default:
+    case let .startSession(receiver):
+        return environment.googleCastClient.startSession(receiver)
+            .map(AppAction.googleCastClient)
+            .catch { Just(.errorOccurred($0.errorDescription ?? "Unknown error occurred")) }
+            .eraseToEffect()
+
+    case let .googleCastClient(.discovered(receivers: receivers)):
+        state.receivers = receivers
+        return .none
+
+    case let .googleCastClient(.sessionStarted(activeSessionReceiverID)):
+        state.activeSessionReceiverID = activeSessionReceiverID
+        return .none
+
+    case .googleCastClient(.sessionEnded):
+        state.activeSessionReceiverID = nil
+        return .none
+
+    case let .errorOccurred(description):
+        state.error = .init(title: .init(description))
+        return .none
+
+    case .dismissError:
+        state.error = nil
         return .none
     }
 }
-
-let googleCastReducer = Reducer<[GoogleCastReceiver], GoogleCastClient.Action, Void> { state, action, _ in
-    switch action {
-    case let .discovered(receivers: receivers):
-        state = receivers
-
-        return .none
-    }
-}
+    .debug()

@@ -10,7 +10,9 @@ import ComposableArchitecture
 import GoogleCastClient
 
 public struct AppState: Equatable {
+    public var error: AlertState<AppAction>?
     public var receivers: [GoogleCastReceiver]
+    public var activeSessionReceiverID: String?
 
     public init(
         receivers: [GoogleCastReceiver] = []

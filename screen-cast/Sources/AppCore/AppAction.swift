@@ -13,7 +13,10 @@ public enum LifecycleAction {
   case onDisappear
 }
 
-public enum AppAction {
+public enum AppAction: Equatable {
     case googleCastClient(GoogleCastClient.Action)
+    case startSession(GoogleCastReceiver)
     case lifecycleAction(LifecycleAction)
+    case errorOccurred(String)
+    case dismissError
 }

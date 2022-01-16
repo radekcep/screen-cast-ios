@@ -26,13 +26,16 @@ public struct AppView: View {
                         footer: Text("Receivers will pop up automatically as they become available."),
                         content: {
                             ForEach(viewStore.receivers) { receiver in
-                                Text(receiver.name)
+                                Button(receiver.name) {
+                                    viewStore.send(.startSession(receiver))
+                                }
                             }
                         }
                     )
                 }
                 .navigationTitle("ScreenCast")
             }
+            .alert(self.store.scope(state: \.error), dismiss: .dismissError)
             .navigationViewStyle(.stack)
             .onAppear { viewStore.send(.lifecycleAction(.onAppear)) }
             .onDisappear { viewStore.send(.lifecycleAction(.onDisappear)) }
