@@ -45,7 +45,7 @@ extension GoogleCastClient {
                 }
             }, startSession: { googleCastReceiver in
                 .run { subscriber in
-                    guard let gckDevice = discoveryManager.device(withUniqueID: googleCastReceiver.id) else {
+                    guard let gckDevice = discoveryManager.device(withUniqueID: googleCastReceiver.id.rawValue) else {
                         subscriber.send(completion: .failure(.deviceUnavailable))
                         return AnyCancellable { }
                     }

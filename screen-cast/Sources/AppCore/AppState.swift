@@ -12,7 +12,7 @@ import GoogleCastClient
 public struct AppState: Equatable {
     public var error: AlertState<AppAction>?
     public var receivers: [GoogleCastReceiver]
-    public var activeSessionReceiverID: String?
+    public var selectedReceiverID: GoogleCastReceiver.ID?
 
     public init(
         receivers: [GoogleCastReceiver] = []

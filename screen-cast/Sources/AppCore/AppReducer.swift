@@ -33,11 +33,11 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, ac
         return .none
 
     case let .googleCastClient(.sessionStarted(activeSessionReceiverID)):
-        state.activeSessionReceiverID = activeSessionReceiverID
+        state.selectedReceiverID = activeSessionReceiverID
         return .none
 
     case .googleCastClient(.sessionEnded):
-        state.activeSessionReceiverID = nil
+        state.selectedReceiverID = nil
         return .none
 
     case let .errorOccurred(description):

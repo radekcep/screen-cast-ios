@@ -11,7 +11,7 @@ import Foundation
 public struct GoogleCastClient {
     public enum Action: Equatable {
         case discovered(receivers: [GoogleCastReceiver])
-        case sessionStarted(String)
+        case sessionStarted(GoogleCastReceiver.ID)
         case sessionEnded
     }
 

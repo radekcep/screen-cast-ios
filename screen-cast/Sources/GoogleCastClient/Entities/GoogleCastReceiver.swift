@@ -7,18 +7,24 @@
 
 import Foundation
 import GoogleCast
+import Tagged
 
 public struct GoogleCastReceiver: Identifiable, Equatable {
-    public let id: String
+    // swiftlint:disable:next type_name
+    public typealias ID = Tagged<GoogleCastReceiver, String>
+
+    public let id: ID
     public let name: String
 
-    public init(id: String, name: String) {
+    public init(id: ID, name: String) {
         self.id = id
         self.name = name
     }
 
     init(gckDevice: GCKDevice) {
-        id = gckDevice.uniqueID
+        id = .init(
+            rawValue: gckDevice.uniqueID
+        )
         name = gckDevice.friendlyName
             ?? gckDevice.modelName
             ?? gckDevice.deviceID

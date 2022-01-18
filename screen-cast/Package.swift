@@ -14,7 +14,8 @@ let package = Package(
         .library(name: "GoogleCastClient", targets: ["GoogleCastClient"])
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.1")
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.1"),
+        .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.6.0")
     ],
     targets: [
         // MARK: - AppCore
@@ -22,6 +23,7 @@ let package = Package(
             name: "AppCore",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Tagged", package: "swift-tagged"),
                 .target(name: "GoogleCastClient")
             ]
         ),
@@ -44,6 +46,7 @@ let package = Package(
             name: "GoogleCastClient",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Tagged", package: "swift-tagged"),
                 .target(name: "GoogleCast")
             ]
         ),
