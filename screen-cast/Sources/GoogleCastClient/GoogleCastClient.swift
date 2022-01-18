@@ -19,7 +19,6 @@ public struct GoogleCastClient {
         case deviceUnavailable
         case sessionInterrupted
         case unableToStartSession
-        case sessionAlreadyInProgress
     }
 
     public var startDiscovery: () -> Effect<Action, Never>
@@ -35,8 +34,6 @@ extension GoogleCastClient.Error: LocalizedError {
             return "Session interrupted"
         case .unableToStartSession:
             return "Unable to start the session"
-        case .sessionAlreadyInProgress:
-            return "Another session is already in progress"
         }
     }
 }

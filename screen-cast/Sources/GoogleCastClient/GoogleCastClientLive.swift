@@ -50,11 +50,6 @@ extension GoogleCastClient {
                         return AnyCancellable { }
                     }
 
-                    guard sessionManager.currentSession == nil else {
-                        subscriber.send(completion: .failure(.sessionAlreadyInProgress))
-                        return AnyCancellable { }
-                    }
-
                     sessionListener = SessionManagerListener(
                         sessionManagerDidStartSession: { _, _ in
                             subscriber.send(.sessionStarted(googleCastReceiver.id))
