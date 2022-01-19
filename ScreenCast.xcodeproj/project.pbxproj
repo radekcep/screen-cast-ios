@@ -12,8 +12,34 @@
 		BF2EC67D278F0761003ABFAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF2EC67C278F0761003ABFAF /* Assets.xcassets */; };
 		BF5206812791EE3E00BB3646 /* GoogleCastClient in Frameworks */ = {isa = PBXBuildFile; productRef = BF5206802791EE3E00BB3646 /* GoogleCastClient */; };
 		BFA652772792E3B50098C8DD /* AppView in Frameworks */ = {isa = PBXBuildFile; productRef = BFA652762792E3B50098C8DD /* AppView */; };
+		BFA6528B279820D10098C8DD /* SampleHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA6528A279820D10098C8DD /* SampleHandler.swift */; };
+		BFA6528F279820D10098C8DD /* BroadcastUploadExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BFA65285279820D10098C8DD /* BroadcastUploadExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		BFA7C9F227908B4B007F0680 /* AppCore in Frameworks */ = {isa = PBXBuildFile; productRef = BFA7C9F127908B4B007F0680 /* AppCore */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BFA6528D279820D10098C8DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BF2EC66D278F0760003ABFAF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BFA65284279820D10098C8DD;
+			remoteInfo = BroadcastUploadExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BFA65290279820D10098C8DD /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				BFA6528F279820D10098C8DD /* BroadcastUploadExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		BF09431527921B650057E48C /* ScreenCast.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScreenCast.entitlements; sourceTree = "<group>"; };
@@ -22,6 +48,9 @@
 		BF2EC67A278F0760003ABFAF /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		BF2EC67C278F0761003ABFAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BFA65278279304520098C8DD /* ScreenCast-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ScreenCast-Info.plist"; sourceTree = "<group>"; };
+		BFA65285279820D10098C8DD /* BroadcastUploadExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BroadcastUploadExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BFA6528A279820D10098C8DD /* SampleHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleHandler.swift; sourceTree = "<group>"; };
+		BFA6528C279820D10098C8DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BFA7C9EA2790841B007F0680 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		BFA7C9EB279084DE007F0680 /* screen-cast */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "screen-cast"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -37,6 +66,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BFA65282279820D10098C8DD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -46,6 +82,7 @@
 				BFA7C9EA2790841B007F0680 /* README.md */,
 				BFA7C9EB279084DE007F0680 /* screen-cast */,
 				BFA7C9E9279083C1007F0680 /* App */,
+				BFA65289279820D10098C8DD /* BroadcastUploadExtension */,
 				BF2EC676278F0760003ABFAF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				BF2EC675278F0760003ABFAF /* ScreenCast.app */,
+				BFA65285279820D10098C8DD /* BroadcastUploadExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -66,6 +104,15 @@
 				BF2EC67C278F0761003ABFAF /* Assets.xcassets */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		BFA65289279820D10098C8DD /* BroadcastUploadExtension */ = {
+			isa = PBXGroup;
+			children = (
+				BFA6528A279820D10098C8DD /* SampleHandler.swift */,
+				BFA6528C279820D10098C8DD /* Info.plist */,
+			);
+			path = BroadcastUploadExtension;
 			sourceTree = "<group>";
 		};
 		BFA7C9E9279083C1007F0680 /* App */ = {
@@ -89,10 +136,12 @@
 				BF2EC672278F0760003ABFAF /* Frameworks */,
 				BF2EC673278F0760003ABFAF /* Resources */,
 				BF4897F1279172EB00A54FF5 /* SwiftLint */,
+				BFA65290279820D10098C8DD /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				BFA6528E279820D10098C8DD /* PBXTargetDependency */,
 			);
 			name = ScreenCast;
 			packageProductDependencies = (
@@ -103,6 +152,23 @@
 			productName = ScreenCast;
 			productReference = BF2EC675278F0760003ABFAF /* ScreenCast.app */;
 			productType = "com.apple.product-type.application";
+		};
+		BFA65284279820D10098C8DD /* BroadcastUploadExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BFA65293279820D10098C8DD /* Build configuration list for PBXNativeTarget "BroadcastUploadExtension" */;
+			buildPhases = (
+				BFA65281279820D10098C8DD /* Sources */,
+				BFA65282279820D10098C8DD /* Frameworks */,
+				BFA65283279820D10098C8DD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BroadcastUploadExtension;
+			productName = BroadcastUploadExtension;
+			productReference = BFA65285279820D10098C8DD /* BroadcastUploadExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -115,6 +181,9 @@
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
 					BF2EC674278F0760003ABFAF = {
+						CreatedOnToolsVersion = 13.2;
+					};
+					BFA65284279820D10098C8DD = {
 						CreatedOnToolsVersion = 13.2;
 					};
 				};
@@ -133,6 +202,7 @@
 			projectRoot = "";
 			targets = (
 				BF2EC674278F0760003ABFAF /* ScreenCast */,
+				BFA65284279820D10098C8DD /* BroadcastUploadExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -143,6 +213,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF2EC67D278F0761003ABFAF /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BFA65283279820D10098C8DD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,7 +256,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BFA65281279820D10098C8DD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BFA6528B279820D10098C8DD /* SampleHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BFA6528E279820D10098C8DD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BFA65284279820D10098C8DD /* BroadcastUploadExtension */;
+			targetProxy = BFA6528D279820D10098C8DD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		BF2EC697278F0761003ABFAF /* Debug */ = {
@@ -301,6 +394,7 @@
 		BF2EC69A278F0761003ABFAF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = App/Resources/ScreenCast.entitlements;
@@ -331,6 +425,7 @@
 		BF2EC69B278F0761003ABFAF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = App/Resources/ScreenCast.entitlements;
@@ -358,6 +453,58 @@
 			};
 			name = Release;
 		};
+		BFA65291279820D10098C8DD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QHXZM6SCHK;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BroadcastUploadExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = BroadcastUploadExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.radekcep.ScreenCast.BroadcastUploadExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BFA65292279820D10098C8DD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QHXZM6SCHK;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BroadcastUploadExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = BroadcastUploadExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.radekcep.ScreenCast.BroadcastUploadExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -375,6 +522,15 @@
 			buildConfigurations = (
 				BF2EC69A278F0761003ABFAF /* Debug */,
 				BF2EC69B278F0761003ABFAF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BFA65293279820D10098C8DD /* Build configuration list for PBXNativeTarget "BroadcastUploadExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BFA65291279820D10098C8DD /* Debug */,
+				BFA65292279820D10098C8DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
