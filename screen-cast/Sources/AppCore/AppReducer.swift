@@ -9,35 +9,45 @@ import Combine
 import ComposableArchitecture
 import Foundation
 import GoogleCastClient
+import TCAHelpers
 
 public let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, environment in
     struct GoogleCastReceiversID: Hashable { }
 
     switch action {
-    case .lifecycleAction(.onAppear):
-        return environment.googleCastClient.startDiscovery()
+    case .onAppear:
+        let startDiscovery = environment.googleCastClient.startDiscovery()
             .map(AppAction.googleCastClient)
             .cancellable(id: GoogleCastReceiversID())
+            .eraseToEffect()
+        let loadSettings = Just(AppAction.loadUserSettings)
+            .eraseToEffect()
+        return .merge(startDiscovery, loadSettings)
 
-    case .lifecycleAction(.onDisappear):
+    case .onDisappear:
         return .cancel(id: GoogleCastReceiversID())
 
-    case let .startSession(receiver):
-        return environment.googleCastClient.startSession(receiver)
-            .map(AppAction.googleCastClient)
-            .catch { Just(.errorOccurred($0.errorDescription ?? "Unknown error occurred")) }
-            .eraseToEffect()
+    case .loadUserSettings:
+        state.userSettings = environment.settingsClient.savedUserSettings()
+        return .none
+
+    case let .save(userSettings):
+        environment.settingsClient.save(userSettings)
+        return .none
+
+    case let .select(receiverID):
+        state.userSettings?.selectedReceiverID = receiverID
+        return .none
+
+    case .deselectGoogleCastReceiver:
+        state.userSettings?.selectedReceiverID = nil
+        return .none
 
     case let .googleCastClient(.discovered(receivers: receivers)):
         state.receivers = receivers
         return .none
 
-    case let .googleCastClient(.sessionStarted(activeSessionReceiverID)):
-        state.selectedReceiverID = activeSessionReceiverID
-        return .none
-
-    case .googleCastClient(.sessionEnded):
-        state.selectedReceiverID = nil
+    case .googleCastClient:
         return .none
 
     case let .errorOccurred(description):
@@ -49,4 +59,8 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, ac
         return .none
     }
 }
+    .onChange(of: \.userSettings) { userSettings, _, _, environment in
+        userSettings.map(environment.settingsClient.save)
+        return .none
+    }
     .debug()

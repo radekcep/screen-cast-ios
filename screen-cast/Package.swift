@@ -24,7 +24,9 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Tagged", package: "swift-tagged"),
-                .target(name: "GoogleCastClient")
+                .target(name: "GoogleCastClient"),
+                .target(name: "SettingsClient"),
+                .target(name: "TCAHelpers")
             ]
         ),
         .testTarget(
@@ -53,6 +55,24 @@ let package = Package(
         .binaryTarget(
             name: "GoogleCast",
             path: "Sources/GoogleCast/GoogleCast.xcframework"
+        ),
+
+        // MARK: - SettingsClient
+        .target(
+            name: "SettingsClient",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Tagged", package: "swift-tagged"),
+                .target(name: "GoogleCastClient")
+            ]
+        ),
+
+        // MARK: - TCAHelpers
+        .target(
+            name: "TCAHelpers",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ]
         )
     ]
 )

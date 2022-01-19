@@ -8,6 +8,7 @@
 import AppCore
 import ComposableArchitecture
 import Foundation
+import GoogleCastClient
 import SwiftUI
 
 public struct AppView: View {
@@ -26,9 +27,7 @@ public struct AppView: View {
                         footer: Text("Receivers will pop up automatically as they become available."),
                         content: {
                             ForEach(viewStore.receivers) { receiver in
-                                Button(receiver.name) {
-                                    viewStore.send(.startSession(receiver))
-                                }
+                                ReceiverCell(store: store, receiver: receiver)
                             }
                         }
                     )
@@ -37,9 +36,48 @@ public struct AppView: View {
             }
             .alert(self.store.scope(state: \.error), dismiss: .dismissError)
             .navigationViewStyle(.stack)
-            .onAppear { viewStore.send(.lifecycleAction(.onAppear)) }
-            .onDisappear { viewStore.send(.lifecycleAction(.onDisappear)) }
+            .onAppear { viewStore.send(.onAppear) }
+            .onDisappear { viewStore.send(.onDisappear) }
         }
+    }
+}
+
+struct ReceiverCell: View {
+    let viewStore: ViewStore<AppState, AppAction>
+    let receiver: GoogleCastReceiver
+
+    var isSelected: Bool {
+        viewStore.userSettings?.selectedReceiverID == receiver.id
+    }
+
+    init(store: Store<AppState, AppAction>, receiver: GoogleCastReceiver) {
+        self.viewStore = ViewStore(store)
+        self.receiver = receiver
+    }
+
+    var body: some View {
+        Button {
+            viewStore.send(
+                isSelected ? .deselectGoogleCastReceiver : .select(receiver.id)
+            )
+        } label: {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(receiver.name)
+
+                    if isSelected {
+                        Text("Your screen will be cast to this device")
+                            .font(.system(.footnote))
+                    }
+                }
+
+                if isSelected {
+                    Spacer()
+                    Image(systemName: "tv")
+                }
+            }
+        }
+        .tint(.black)
     }
 }
 
@@ -54,11 +92,15 @@ struct AppView_Previews: PreviewProvider {
                         .init(id: "2", name: "Bedroom TV"),
                         .init(id: "3", name: "Bathroom TV"),
                         .init(id: "4", name: "Toilet 4K Plasma TV")
-                    ]
+                    ],
+                    userSettings: .init(
+                        selectedReceiverID: "2"
+                    )
                 ),
                 reducer: .empty,
                 environment: AppEnvironment(
-                    googleCastClient: .stub
+                    googleCastClient: .stub,
+                    settingsClient: .stub
                 )
             )
         )

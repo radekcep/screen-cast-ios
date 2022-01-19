@@ -16,7 +16,8 @@ struct RootView: View {
         initialState: AppState(),
         reducer: appReducer,
         environment: AppEnvironment(
-            googleCastClient: .live
+            googleCastClient: .live,
+            settingsClient: .live
         )
     )
 

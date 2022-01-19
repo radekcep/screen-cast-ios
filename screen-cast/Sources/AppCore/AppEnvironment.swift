@@ -7,13 +7,17 @@
 
 import Foundation
 import GoogleCastClient
+import SettingsClient
 
 public struct AppEnvironment {
     public var googleCastClient: GoogleCastClient
+    public var settingsClient: SettingsClient
 
     public init(
-        googleCastClient: GoogleCastClient
+        googleCastClient: GoogleCastClient,
+        settingsClient: SettingsClient
     ) {
         self.googleCastClient = googleCastClient
+        self.settingsClient = settingsClient
     }
 }

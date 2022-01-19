@@ -8,15 +8,20 @@
 import Foundation
 import ComposableArchitecture
 import GoogleCastClient
+import SettingsClient
 
 public struct AppState: Equatable {
     public var error: AlertState<AppAction>?
     public var receivers: [GoogleCastReceiver]
-    public var selectedReceiverID: GoogleCastReceiver.ID?
+    public var userSettings: UserSettings?
 
     public init(
-        receivers: [GoogleCastReceiver] = []
+        error: AlertState<AppAction>? = nil,
+        receivers: [GoogleCastReceiver] = [],
+        userSettings: UserSettings? = nil
     ) {
+        self.error = error
         self.receivers = receivers
+        self.userSettings = userSettings
     }
 }
