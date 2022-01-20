@@ -56,6 +56,24 @@
         }
       },
       {
+        "package": "swift-nio",
+        "repositoryURL": "https://github.com/apple/swift-nio.git",
+        "state": {
+          "branch": null,
+          "revision": "51c3fc2e4a0fcdf4a25089b288dd65b73df1b0ef",
+          "version": "2.37.0"
+        }
+      },
+      {
+        "package": "swift-nio-transport-services",
+        "repositoryURL": "https://github.com/apple/swift-nio-transport-services.git",
+        "state": {
+          "branch": null,
+          "revision": "8ab824b140d0ebcd87e9149266ddc353e3705a3e",
+          "version": "1.11.4"
+        }
+      },
+      {
         "package": "swift-tagged",
         "repositoryURL": "https://github.com/pointfreeco/swift-tagged",
         "state": {

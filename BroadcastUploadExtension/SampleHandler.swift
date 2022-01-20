@@ -6,11 +6,16 @@
 //
 
 import ReplayKit
+import HLSClient
+
+let client: HLSClient = .live
 
 class SampleHandler: RPBroadcastSampleHandler {
 
     override func broadcastStarted(withSetupInfo setupInfo: [String: NSObject]?) {
-        // User has requested to start the broadcast. Setup info from the UI extension can be supplied but optional. 
+        // User has requested to start the broadcast. Setup info from the UI extension can be supplied but optional.
+
+        client.startServer()
     }
 
     override func broadcastPaused() {
@@ -29,6 +34,7 @@ class SampleHandler: RPBroadcastSampleHandler {
         switch sampleBufferType {
         case RPSampleBufferType.video:
             // Handle video sample buffer
+            client.writeBuffer(sampleBuffer)
             break
         case RPSampleBufferType.audioApp:
             // Handle audio sample buffer for app audio

@@ -11,11 +11,14 @@ let package = Package(
     products: [
         .library(name: "AppCore", targets: ["AppCore"]),
         .library(name: "AppView", targets: ["AppView"]),
-        .library(name: "GoogleCastClient", targets: ["GoogleCastClient"])
+        .library(name: "GoogleCastClient", targets: ["GoogleCastClient"]),
+        .library(name: "HLSClient", targets: ["HLSClient"])
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.1"),
-        .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.6.0")
+        .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.6.0"),
+        .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "1.1.1"),
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0")
     ],
     targets: [
         // MARK: - AppCore
@@ -55,6 +58,19 @@ let package = Package(
         .binaryTarget(
             name: "GoogleCast",
             path: "Sources/GoogleCast/GoogleCast.xcframework"
+        ),
+
+        // MARK: - HLSClient
+        .target(
+            name: "HLSClient",
+            dependencies: [
+                .product(name: "NIOHTTP1", package: "swift-nio"),
+                .product(name: "NIOTransportServices", package: "swift-nio-transport-services"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            resources: [
+                .copy("Resources")
+            ]
         ),
 
         // MARK: - SettingsClient
