@@ -35,7 +35,6 @@ class SampleHandler: RPBroadcastSampleHandler {
         case RPSampleBufferType.video:
             // Handle video sample buffer
             client.writeBuffer(sampleBuffer)
-            break
         case RPSampleBufferType.audioApp:
             // Handle audio sample buffer for app audio
             break
