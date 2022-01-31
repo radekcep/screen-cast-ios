@@ -5,25 +5,24 @@
 //  Created by Radek Čep on 19.01.2022.
 //
 
+import ComposableArchitecture
+import ExtensionCore
 import ReplayKit
-import HLSClient
-
-let client: HLSClient = .live
 
 class SampleHandler: RPBroadcastSampleHandler {
+    lazy var store = Store(
+        initialState: ExtensionState(),
+        reducer: extensionReducer,
+        environment: ExtensionEnvironment(
+            finishBroadcastWithError: { [weak self] error in self?.finishBroadcastWithError(error) },
+            googleCastClient: .live,
+            settingsClient: .live,
+            hlsClient: .live
+        )
+    )
 
     override func broadcastStarted(withSetupInfo setupInfo: [String: NSObject]?) {
-        // User has requested to start the broadcast. Setup info from the UI extension can be supplied but optional.
-
-        client.startServer()
-    }
-
-    override func broadcastPaused() {
-        // User has requested to pause the broadcast. Samples will stop being delivered.
-    }
-
-    override func broadcastResumed() {
-        // User has requested to resume the broadcast. Samples delivery will resume.
+        sendOnMain(.broadcastStarted)
     }
 
     override func broadcastFinished() {
@@ -31,19 +30,17 @@ class SampleHandler: RPBroadcastSampleHandler {
     }
 
     override func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, with sampleBufferType: RPSampleBufferType) {
-        switch sampleBufferType {
-        case RPSampleBufferType.video:
-            // Handle video sample buffer
-            client.writeBuffer(sampleBuffer)
-        case RPSampleBufferType.audioApp:
-            // Handle audio sample buffer for app audio
-            break
-        case RPSampleBufferType.audioMic:
-            // Handle audio sample buffer for mic audio
-            break
-        @unknown default:
-            // Handle other sample buffer types
-            fatalError("Unknown type of sample buffer")
+        sendOnMain(.processSampleBuffer(sampleBuffer, sampleBufferType))
+    }
+}
+
+private extension SampleHandler {
+    /// Sends the `action` to the Store on the main thread
+    func sendOnMain(_ action: ExtensionAction) {
+        // Store is not thread safe and all actions must be dispatched on the main thread.
+        // RPBroadcastSampleHandler on the other hand runs on a background thread by default.
+        DispatchQueue.main.async {
+            ViewStore(self.store).send(action)
         }
     }
 }

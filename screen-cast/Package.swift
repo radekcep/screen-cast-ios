@@ -11,8 +11,7 @@ let package = Package(
     products: [
         .library(name: "AppCore", targets: ["AppCore"]),
         .library(name: "AppView", targets: ["AppView"]),
-        .library(name: "GoogleCastClient", targets: ["GoogleCastClient"]),
-        .library(name: "HLSClient", targets: ["HLSClient"])
+        .library(name: "ExtensionCore", targets: ["ExtensionCore"])
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.1"),
@@ -43,6 +42,17 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .target(name: "AppCore")
+            ]
+        ),
+
+        // MARK: - ExtensionCore
+        .target(
+            name: "ExtensionCore",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "GoogleCastClient"),
+                .target(name: "SettingsClient"),
+                .target(name: "HLSClient")
             ]
         ),
 

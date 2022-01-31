@@ -12,40 +12,41 @@ import GoogleCast
 
 extension GoogleCastClient {
     public static var live: Self {
+        var castContext: GCKCastContext!
         var discoveryListener: GCKDiscoveryManagerListener?
         var sessionListener: GCKSessionManagerListener?
-
-        let discoveryCriteria = GCKDiscoveryCriteria(applicationID: kGCKDefaultMediaReceiverApplicationID)
-        let options = GCKCastOptions(discoveryCriteria: discoveryCriteria)
-
-        GCKCastContext.setSharedInstanceWith(options)
-        let discoveryManager = GCKCastContext.sharedInstance().discoveryManager
-        let sessionManager = GCKCastContext.sharedInstance().sessionManager
 
         return .init(
             startDiscovery: {
                 .run { subscriber in
+                    if castContext == nil {
+                        let discoveryCriteria = GCKDiscoveryCriteria(applicationID: kGCKDefaultMediaReceiverApplicationID)
+                        let options = GCKCastOptions(discoveryCriteria: discoveryCriteria)
+                        GCKCastContext.setSharedInstanceWith(options)
+                        castContext = GCKCastContext.sharedInstance()
+                    }
+
                     discoveryListener = DiscoveryManagerListener(
                         didUpdateDeviceList: {
-                            let receivers = (0..<discoveryManager.deviceCount)
-                                .map(discoveryManager.device(at:))
+                            let receivers = (0..<castContext.discoveryManager.deviceCount)
+                                .map(castContext.discoveryManager.device(at:))
                                 .map(GoogleCastReceiver.init)
 
                             subscriber.send(.discovered(receivers: receivers))
                         }
                     )
 
-                    discoveryManager.add(discoveryListener!)
-                    discoveryManager.startDiscovery()
+                    castContext.discoveryManager.add(discoveryListener!)
+                    castContext.discoveryManager.startDiscovery()
 
                     return AnyCancellable {
-                        discoveryManager.remove(discoveryListener!)
-                        discoveryManager.stopDiscovery()
+                        castContext.discoveryManager.remove(discoveryListener!)
+                        castContext.discoveryManager.stopDiscovery()
                     }
                 }
             }, startSession: { googleCastReceiver in
                 .run { subscriber in
-                    guard let gckDevice = discoveryManager.device(withUniqueID: googleCastReceiver.id.rawValue) else {
+                    guard let gckDevice = castContext.discoveryManager.device(withUniqueID: googleCastReceiver.id.rawValue) else {
                         subscriber.send(completion: .failure(.deviceUnavailable))
                         return AnyCancellable { }
                     }
@@ -68,12 +69,12 @@ extension GoogleCastClient {
                         }
                     )
 
-                    sessionManager.add(sessionListener!)
-                    sessionManager.startSession(with: gckDevice)
+                    castContext.sessionManager.add(sessionListener!)
+                    castContext.sessionManager.startSession(with: gckDevice)
 
                     return AnyCancellable {
-                        sessionManager.remove(sessionListener!)
-                        sessionManager.endSession()
+                        castContext.sessionManager.remove(sessionListener!)
+                        castContext.sessionManager.endSession()
                     }
                 }
             }

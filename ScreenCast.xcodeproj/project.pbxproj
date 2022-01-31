@@ -10,7 +10,7 @@
 		BF2EC679278F0760003ABFAF /* ScreenCastApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2EC678278F0760003ABFAF /* ScreenCastApp.swift */; };
 		BF2EC67B278F0760003ABFAF /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2EC67A278F0760003ABFAF /* RootView.swift */; };
 		BF2EC67D278F0761003ABFAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF2EC67C278F0761003ABFAF /* Assets.xcassets */; };
-		BF65FD7E2799B04B000840F3 /* HLSClient in Frameworks */ = {isa = PBXBuildFile; productRef = BF65FD7D2799B04B000840F3 /* HLSClient */; };
+		BF9E364127A82B630092DC2C /* ExtensionCore in Frameworks */ = {isa = PBXBuildFile; productRef = BF9E364027A82B630092DC2C /* ExtensionCore */; };
 		BFA652772792E3B50098C8DD /* AppView in Frameworks */ = {isa = PBXBuildFile; productRef = BFA652762792E3B50098C8DD /* AppView */; };
 		BFA6528B279820D10098C8DD /* SampleHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA6528A279820D10098C8DD /* SampleHandler.swift */; };
 		BFA6528F279820D10098C8DD /* BroadcastUploadExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BFA65285279820D10098C8DD /* BroadcastUploadExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -69,7 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF65FD7E2799B04B000840F3 /* HLSClient in Frameworks */,
+				BF9E364127A82B630092DC2C /* ExtensionCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,7 +84,6 @@
 				BFA7C9E9279083C1007F0680 /* App */,
 				BFA65289279820D10098C8DD /* BroadcastUploadExtension */,
 				BF2EC676278F0760003ABFAF /* Products */,
-				BF65FD7C2799B04B000840F3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -95,13 +94,6 @@
 				BFA65285279820D10098C8DD /* BroadcastUploadExtension.appex */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		BF65FD7C2799B04B000840F3 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		BFA652792793048D0098C8DD /* Resources */ = {
@@ -174,7 +166,7 @@
 			);
 			name = BroadcastUploadExtension;
 			packageProductDependencies = (
-				BF65FD7D2799B04B000840F3 /* HLSClient */,
+				BF9E364027A82B630092DC2C /* ExtensionCore */,
 			);
 			productName = BroadcastUploadExtension;
 			productReference = BFA65285279820D10098C8DD /* BroadcastUploadExtension.appex */;
@@ -548,9 +540,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		BF65FD7D2799B04B000840F3 /* HLSClient */ = {
+		BF9E364027A82B630092DC2C /* ExtensionCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = HLSClient;
+			productName = ExtensionCore;
 		};
 		BFA652762792E3B50098C8DD /* AppView */ = {
 			isa = XCSwiftPackageProductDependency;
