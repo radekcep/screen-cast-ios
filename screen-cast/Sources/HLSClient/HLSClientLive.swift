@@ -181,6 +181,8 @@ private final class HTTP1ServerHandler: ChannelInboundHandler {
             var responseHeaders = HTTPHeaders()
             responseHeaders.add(name: "Content-Length", value: "\(data.count)")
             responseHeaders.add(name: "Content-Type", value: contentType)
+            responseHeaders.add(name: "Access-Control-Allow-Origin", value: "*")
+            responseHeaders.add(name: "Access-Control-Expose-Headers", value: "origin, range")
 
             let responseHead = HTTPResponseHead(version: .init(major: 1, minor: 1), status: .ok, headers: responseHeaders)
             context.write(wrapOutboundOut(.head(responseHead)), promise: nil)
