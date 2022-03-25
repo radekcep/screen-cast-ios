@@ -17,7 +17,7 @@ class SampleHandler: RPBroadcastSampleHandler {
             finishBroadcastWithError: { [weak self] error in self?.finishBroadcastWithError(error) },
             googleCastClient: .live,
             settingsClient: .live,
-            hlsClient: .live
+            streamClient: .hls
         )
     )
 

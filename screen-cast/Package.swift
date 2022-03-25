@@ -52,7 +52,7 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .target(name: "GoogleCastClient"),
                 .target(name: "SettingsClient"),
-                .target(name: "HLSClient")
+                .target(name: "StreamClient")
             ]
         ),
 
@@ -70,9 +70,9 @@ let package = Package(
             path: "Sources/GoogleCastClient/Frameworks/GoogleCast.xcframework"
         ),
 
-        // MARK: - HLSClient
+        // MARK: - StreamClient
         .target(
-            name: "HLSClient",
+            name: "StreamClient",
             dependencies: [
                 .product(name: "NIOHTTP1", package: "swift-nio"),
                 .product(name: "NIOTransportServices", package: "swift-nio-transport-services"),

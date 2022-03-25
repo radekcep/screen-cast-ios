@@ -8,24 +8,24 @@
 import Foundation
 import ComposableArchitecture
 import GoogleCastClient
-import HLSClient
+import StreamClient
 import SettingsClient
 
 public struct ExtensionEnvironment {
     public var finishBroadcastWithError: (Error) -> Void
     public var googleCastClient: GoogleCastClient
     public var settingsClient: SettingsClient
-    public var hlsClient: HLSClient
+    public var streamClient: StreamClient
 
     public init(
         finishBroadcastWithError: @escaping (Error) -> Void,
         googleCastClient: GoogleCastClient,
         settingsClient: SettingsClient,
-        hlsClient: HLSClient
+        streamClient: StreamClient
     ) {
         self.finishBroadcastWithError = finishBroadcastWithError
         self.googleCastClient = googleCastClient
         self.settingsClient = settingsClient
-        self.hlsClient = hlsClient
+        self.streamClient = streamClient
     }
 }

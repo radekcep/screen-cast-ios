@@ -9,14 +9,14 @@ import Combine
 import ComposableArchitecture
 import Foundation
 import GoogleCastClient
-import HLSClient
+import StreamClient
 import ReplayKit
 
 public let extensionReducer = Reducer<ExtensionState, ExtensionAction, ExtensionEnvironment> { _, action, environment in
     switch action {
     case .broadcastStarted:
         let serverConfig = ServerConfig.default
-        environment.hlsClient.startServer(serverConfig)
+        environment.streamClient.startServer(serverConfig)
 
         return environment.googleCastClient.startDiscovery()
             .catch { _ in Empty() }
@@ -25,7 +25,7 @@ public let extensionReducer = Reducer<ExtensionState, ExtensionAction, Extension
             .eraseToEffect()
 
     case let .processSampleBuffer(sampleBuffer, sampleBufferType):
-        environment.hlsClient.writeBuffer(sampleBuffer, sampleBufferType)
+        environment.streamClient.writeBuffer(sampleBuffer, sampleBufferType)
         return .none
 
     case .googleCastClient(.discovered):
