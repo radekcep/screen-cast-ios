@@ -21,15 +21,16 @@ private let playlistFileURL: URL = streamDirectoryURL
 
 extension HLSClient {
     public static var live: Self {
-        var writer: AVAssetWriter!
+        var writer: AVAssetWriter?
         var offset: CMTime?
         var videoInput: AVAssetWriterInput!
+        var audioInput: AVAssetWriterInput!
         var assetWriterDelegate: AVAssetWriterDelegate!
         var httpServerTask: Task<(), Never>?
         var unusedStreamSegmentFileSuffix = 0
 
         return .init(
-            startServer: {
+            startServer: { serverConfig in
                 // Stop server if already running
                 httpServerTask?.cancel()
 
@@ -39,19 +40,29 @@ extension HLSClient {
 
                 let fileType = UTType(AVFileType.mp4.rawValue)!
                 writer = AVAssetWriter(contentType: fileType)
-                writer.outputFileTypeProfile = .mpeg4AppleHLS
-                writer.preferredOutputSegmentInterval = CMTime(seconds: 1, preferredTimescale: 1)
-                writer.initialSegmentStartTime = CMTime.zero
+                writer?.outputFileTypeProfile = .mpeg4AppleHLS
+                writer?.preferredOutputSegmentInterval = CMTime(seconds: 1, preferredTimescale: 1)
+                writer?.initialSegmentStartTime = CMTime.zero
 
                 let videoOutputSettings: [String: Any] = [
                     AVVideoCodecKey: AVVideoCodecType.h264,
-                    AVVideoWidthKey: 1125,
-                    AVVideoHeightKey: 2436
+                    AVVideoWidthKey: serverConfig.videoWidth,
+                    AVVideoHeightKey: serverConfig.videoHeight
                 ]
-
                 videoInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoOutputSettings)
                 videoInput.expectsMediaDataInRealTime = true
-                writer.add(videoInput)
+                writer?.add(videoInput)
+
+                var channelLayout = AudioChannelLayout.init()
+                channelLayout.mChannelLayoutTag = kAudioChannelLayoutTag_MPEG_1_0
+                let audioOutputSettings: [String: Any] = [
+                    AVFormatIDKey: kAudioFormatMPEG4AAC,
+                    AVSampleRateKey: 44100,
+                    AVChannelLayoutKey: NSData(bytes: &channelLayout, length: MemoryLayout<AudioChannelLayout>.size)
+                ]
+                audioInput = AVAssetWriterInput(mediaType: .audio, outputSettings: audioOutputSettings)
+                audioInput.expectsMediaDataInRealTime = true
+                writer?.add(audioInput)
 
                 offset = nil
                 unusedStreamSegmentFileSuffix = 0
@@ -69,26 +80,31 @@ extension HLSClient {
 
                     unusedStreamSegmentFileSuffix += 1
                 }
-                writer.delegate = assetWriterDelegate
+                writer?.delegate = assetWriterDelegate
 
                 httpServerTask = Task(priority: .high) {
-                    _ = try? await NIOTSListenerBootstrap(group: NIOTSEventLoopGroup())
-                        .childChannelInitializer { channel in
-                            channel.pipeline
-                                .configureHTTPServerPipeline(withPipeliningAssistance: true, withErrorHandling: true)
-                                .flatMap { channel.pipeline.addHandler(HTTP1ServerHandler()) }
-                        }
-                        .bind(host: "192.168.1.162", port: 8099)
-                        .get()
+                    // TODO: Implement proper error handling here
+                    do {
+                        _ = try await NIOTSListenerBootstrap(group: NIOTSEventLoopGroup())
+                            .childChannelInitializer { channel in
+                                channel.pipeline
+                                    .configureHTTPServerPipeline(withPipeliningAssistance: true, withErrorHandling: true)
+                                    .flatMap { channel.pipeline.addHandler(HTTP1ServerHandler()) }
+                            }
+                            .bind(host: serverConfig.address, port: serverConfig.port)
+                            .get()
+                    } catch {
+                        print("🚨 Could not start the HLS server - \(error)")
+                    }
                 }
             },
-            writeBuffer: { sampleBuffer in
-                if writer.status == .unknown {
-                    writer.startWriting()
-                    writer.startSession(atSourceTime: CMTime.zero)
+            writeBuffer: { sampleBuffer, sampleBufferType in
+                if writer?.status == .unknown {
+                    writer?.startWriting()
+                    writer?.startSession(atSourceTime: CMTime.zero)
                 }
 
-                if writer.status == .writing {
+                if writer?.status == .writing {
                     if let offset = offset {
                         var copyBuffer: CMSampleBuffer?
                         var count: CMItemCount = 1
@@ -110,8 +126,16 @@ extension HLSClient {
                             sampleBufferOut: &copyBuffer
                         )
 
-                        if let copyBuffer = copyBuffer, videoInput.isReadyForMoreMediaData {
+                        guard let copyBuffer = copyBuffer else {
+                            return
+                        }
+
+                        if sampleBufferType == .video, videoInput.isReadyForMoreMediaData {
                             videoInput.append(copyBuffer)
+                        }
+
+                        if sampleBufferType == .audioApp || sampleBufferType == .audioMic, audioInput.isReadyForMoreMediaData {
+                            audioInput.append(copyBuffer)
                         }
                     } else {
                         offset = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)

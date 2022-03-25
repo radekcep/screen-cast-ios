@@ -15,6 +15,7 @@ extension GoogleCastClient {
         var castContext: GCKCastContext!
         var discoveryListener: GCKDiscoveryManagerListener?
         var sessionListener: GCKSessionManagerListener?
+        var requestDelegate: RequestDelegate?
 
         return .init(
             startDiscovery: {
@@ -44,7 +45,8 @@ extension GoogleCastClient {
                         castContext.discoveryManager.stopDiscovery()
                     }
                 }
-            }, startSession: { googleCastReceiver in
+            },
+            startSession: { googleCastReceiver in
                 .run { subscriber in
                     guard let gckDevice = castContext.discoveryManager.device(withUniqueID: googleCastReceiver.id.rawValue) else {
                         subscriber.send(completion: .failure(.deviceUnavailable))
@@ -66,6 +68,9 @@ extension GoogleCastClient {
                         },
                         sessionManagerDidFailToStartSessionWithError: { _, _, _ in
                             subscriber.send(completion: .failure(.unableToStartSession))
+                        },
+                        sessionManagerDidResumeSessionSession: { _, _ in
+                            subscriber.send(.sessionStarted(googleCastReceiver.id))
                         }
                     )
 
@@ -76,6 +81,37 @@ extension GoogleCastClient {
                         castContext.sessionManager.remove(sessionListener!)
                         castContext.sessionManager.endSession()
                     }
+                }
+            },
+            loadMedia: { mediaConfig in
+                .run { subscriber in
+                    let mediaInfoBuilder = GCKMediaInformationBuilder()
+                    mediaInfoBuilder.contentURL = mediaConfig.url
+                    mediaInfoBuilder.hlsVideoSegmentFormat = .FMP4
+
+                    let mediaInformation = mediaInfoBuilder.build()
+                    let request = castContext.sessionManager.currentSession?.remoteMediaClient?.loadMedia(mediaInformation)
+
+                    // TODO: Handle media reques
+                    // NOTE: `requestDidComplete` is called after the request is accepted and the stream starts.
+                    requestDelegate = RequestDelegate(
+                        requestDidComplete: { _ in
+                            print("👀 requestDidComplete \(request.debugDescription)")
+                            //                                    subscriber.send(.requestCompleted)
+                            //                                    subscriber.send(completion: .finished)
+                        },
+                        requestDidFailWithError: { _, error in
+                            print("👀 requestDidFailWithError \(request.debugDescription) \(error)")
+                            //                                    subscriber.send(completion: .failure(.unableToLoadMedia))
+                        },
+                        requestDidAbortWithAbortReason: { _, error in
+                            print("👀 requestDidAbortWithAbortReason \(request.debugDescription) \(error)")
+                            //                                    subscriber.send(completion: .failure(.mediaRequestAborted))
+                        }
+                    )
+                    request?.delegate = requestDelegate
+
+                    return AnyCancellable {}
                 }
             }
         )

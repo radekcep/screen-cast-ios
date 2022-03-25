@@ -7,8 +7,9 @@
 
 import AVFoundation
 import Foundation
+import ReplayKit
 
 public struct HLSClient {
-    public var startServer: () -> Void
-    public var writeBuffer: (CMSampleBuffer) -> Void
+    public var startServer: (ServerConfig) -> Void
+    public var writeBuffer: (CMSampleBuffer, RPSampleBufferType) -> Void
 }
