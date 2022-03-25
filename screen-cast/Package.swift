@@ -67,7 +67,7 @@ let package = Package(
         ),
         .binaryTarget(
             name: "GoogleCast",
-            path: "Sources/GoogleCast/GoogleCast.xcframework"
+            path: "Sources/GoogleCastClient/Frameworks/GoogleCast.xcframework"
         ),
 
         // MARK: - HLSClient
