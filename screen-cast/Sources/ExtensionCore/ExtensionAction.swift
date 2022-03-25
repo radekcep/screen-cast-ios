@@ -8,9 +8,11 @@
 import Foundation
 import GoogleCastClient
 import ReplayKit
+import StreamClient
 
 public enum ExtensionAction: Equatable {
     case broadcastStarted
     case processSampleBuffer(CMSampleBuffer, RPSampleBufferType)
     case googleCastClient(GoogleCastClient.Action)
+    case streamClient(StreamClient.Action)
 }

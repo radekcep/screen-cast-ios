@@ -6,11 +6,12 @@
 //
 
 import AVFoundation
+import Combine
 import Foundation
+import NIO
 import NIOCore
 import NIOHTTP1
 import NIOTransportServices
-import NIO
 
 private let playlistFilename = "playlist.m3u8"
 private let segmentFilenamePrefix = "segment"
@@ -25,59 +26,110 @@ private let playlistFileURL: URL = streamDirectoryURL
 extension StreamClient {
     public static var hls: Self {
         var writer: HLS.AssetWritter?
-        var httpServerTask: Task<(), Never>?
         var unusedStreamSegmentFileSuffix = 0
+        let backgroundQueue = DispatchQueue(label: "StreamClient.ServerQueue")
+
+        var openedChannel: Channel?
 
         return .init(
             startServer: { serverConfig in
-                // Stop server if already running
-                httpServerTask?.cancel()
+                Deferred {
+                    Future<Void, StreamClient.Error> { observer in
+                        do {
+                            // Stop any previous server from writing new buffers
+                            writer = nil
 
-                // Recreate streamDirectoryURL to remove any old files
-                try? FileManager.default.removeItem(at: streamDirectoryURL)
-                try? FileManager.default.createDirectory(at: streamDirectoryURL, withIntermediateDirectories: true, attributes: nil)
+                            // Stop the previously running server, if any
+                            try openedChannel?.close().wait()
 
-                unusedStreamSegmentFileSuffix = 0
+                            // Recreate streamDirectoryURL to remove any old files
+                            try? FileManager.default.removeItem(at: streamDirectoryURL)
+                            try? FileManager.default.createDirectory(at: streamDirectoryURL, withIntermediateDirectories: true)
 
-                writer = .init(
-                    videoWidth: serverConfig.videoWidth,
-                    videoHeight: serverConfig.videoHeight
-                ) { _, segmentData, _, segmentReport in
-                    let segmentExtension = segmentReport == nil ? "mp4" : "m4s"
-                    let segmentName = "\(segmentFilenamePrefix)_\(unusedStreamSegmentFileSuffix).\(segmentExtension)"
-                    let segmentDuration = segmentReport?.trackReports.first?.duration.seconds
+                            // Reset segments index
+                            unusedStreamSegmentFileSuffix = 0
 
-                    let savedPlaylistContent = try? String(
-                        contentsOf: playlistFileURL,
-                        encoding: .utf8
-                    )
-                    let newPlaylistContent = HLS.playlist(
-                        basedOn: savedPlaylistContent,
-                        updatedWith: segmentName,
-                        duration: segmentDuration
-                    )
+                            // Create a new writter
+                            writer = .init(
+                                videoWidth: serverConfig.videoWidth,
+                                videoHeight: serverConfig.videoHeight
+                            ) { _, segmentData, _, segmentReport in
+                                let segmentExtension = segmentReport == nil ? "mp4" : "m4s"
+                                let segmentName = "\(segmentFilenamePrefix)_\(unusedStreamSegmentFileSuffix).\(segmentExtension)"
+                                let segmentDuration = segmentReport?.trackReports.first?.duration.seconds
 
-                    try? segmentData.write(to: streamDirectoryURL.appendingPathComponent(segmentName))
-                    try? newPlaylistContent.data(using: .utf8)?.write(to: playlistFileURL)
+                                let savedPlaylistContent = try? String(
+                                    contentsOf: playlistFileURL,
+                                    encoding: .utf8
+                                )
+                                let newPlaylistContent = HLS.playlist(
+                                    basedOn: savedPlaylistContent,
+                                    updatedWith: segmentName,
+                                    duration: segmentDuration
+                                )
 
-                    unusedStreamSegmentFileSuffix += 1
-                }
+                                try? segmentData.write(to: streamDirectoryURL.appendingPathComponent(segmentName))
+                                try? newPlaylistContent.data(using: .utf8)?.write(to: playlistFileURL)
 
-                httpServerTask = Task(priority: .high) {
-                    // TODO: Implement proper error handling here
-                    do {
-                        _ = try await NIOTSListenerBootstrap(group: NIOTSEventLoopGroup())
-                            .childChannelInitializer { channel in
-                                channel.pipeline
-                                    .configureHTTPServerPipeline(withPipeliningAssistance: true, withErrorHandling: true)
-                                    .flatMap { channel.pipeline.addHandler(HTTP1ServerHandler()) }
+                                unusedStreamSegmentFileSuffix += 1
                             }
-                            .bind(host: serverConfig.address, port: serverConfig.port)
-                            .get()
-                    } catch {
-                        print("🚨 Could not start the HLS server - \(error)")
+
+                            print("StreamClient - Clean up complete")
+                            observer(.success(()))
+
+                        } catch {
+                            print("StreamClient - Failed to clean up")
+                            observer(.failure(.unableToCloseRunningServer(error)))
+                        }
                     }
                 }
+                .flatMap {
+                    Future<String, StreamClient.Error> { observer in
+                        guard let wifiIPAddress = Network.wifiIPAddress() else {
+                            print("StreamClient - Could not obtain WiFi address")
+                            observer(.failure(.wifiAddressUnavailable))
+                            return
+                        }
+
+                        print("StreamClient - Obtained WiFi address: \(wifiIPAddress)")
+                        observer(.success(wifiIPAddress))
+                    }
+                }
+                .flatMap { wifiIPAddress in
+                    // Start a new server
+                    Future<StreamClient.Action, StreamClient.Error> { observer in
+                        print("StreamClient - Starting up server...")
+
+                        do {
+                            openedChannel = try NIOTSListenerBootstrap(group: NIOTSEventLoopGroup())
+                                .childChannelInitializer { channel in
+                                    channel.pipeline
+                                        .configureHTTPServerPipeline(withPipeliningAssistance: true, withErrorHandling: true)
+                                        .flatMap { channel.pipeline.addHandler(HTTP1ServerHandler()) }
+                                }
+                                .bind(host: wifiIPAddress, port: 0)
+                                .wait()
+                        } catch {
+                            print("StreamClient - Unable to start up server: \(error)")
+                            observer(.failure(.unableToStartServer(error)))
+                            return
+                        }
+
+                        if let ipAddress = openedChannel?.localAddress?.ipAddress,
+                            let port = openedChannel?.localAddress?.port,
+                            let url = URL(string: "http://\(ipAddress):\(port)/\(playlistFilename)") {
+
+                            print("StreamClient - Server up: \(url)")
+                            observer(.success(.serverRunning(url)))
+                        } else {
+
+                            print("StreamClient - Invalid url")
+                            observer(.failure(.invalidIPAddress))
+                        }
+                    }
+                }
+                .subscribe(on: backgroundQueue)
+                .eraseToEffect()
             },
             writeBuffer: {
                 writer?.writeBuffer(sampleBuffer: $0, sampleBufferType: $1)

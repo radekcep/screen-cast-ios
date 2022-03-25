@@ -8,5 +8,7 @@
 import Foundation
 
 public struct ExtensionState: Equatable {
+    public var serverURL: URL?
+
     public init() { }
 }

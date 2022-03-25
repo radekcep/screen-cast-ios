@@ -92,20 +92,22 @@ extension GoogleCastClient {
                     let mediaInformation = mediaInfoBuilder.build()
                     let request = castContext.sessionManager.currentSession?.remoteMediaClient?.loadMedia(mediaInformation)
 
+                    print("GoogleCastClient - Requesting a connection to: \(mediaConfig.url)")
+
                     // TODO: Handle media reques
                     // NOTE: `requestDidComplete` is called after the request is accepted and the stream starts.
                     requestDelegate = RequestDelegate(
                         requestDidComplete: { _ in
-                            print("👀 requestDidComplete \(request.debugDescription)")
+                            print("GoogleCastClient - requestDidComplete \(request.debugDescription)")
                             //                                    subscriber.send(.requestCompleted)
                             //                                    subscriber.send(completion: .finished)
                         },
                         requestDidFailWithError: { _, error in
-                            print("👀 requestDidFailWithError \(request.debugDescription) \(error)")
+                            print("GoogleCastClient - requestDidFailWithError \(request.debugDescription) \(error)")
                             //                                    subscriber.send(completion: .failure(.unableToLoadMedia))
                         },
                         requestDidAbortWithAbortReason: { _, error in
-                            print("👀 requestDidAbortWithAbortReason \(request.debugDescription) \(error)")
+                            print("GoogleCastClient - requestDidAbortWithAbortReason \(request.debugDescription) \(error)")
                             //                                    subscriber.send(completion: .failure(.mediaRequestAborted))
                         }
                     )

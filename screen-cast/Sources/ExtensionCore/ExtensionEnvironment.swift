@@ -16,6 +16,7 @@ public struct ExtensionEnvironment {
     public var googleCastClient: GoogleCastClient
     public var settingsClient: SettingsClient
     public var streamClient: StreamClient
+    public var mainQueue: AnySchedulerOf<DispatchQueue> = .main
 
     public init(
         finishBroadcastWithError: @escaping (Error) -> Void,
