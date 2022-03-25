@@ -77,9 +77,6 @@ let package = Package(
                 .product(name: "NIOHTTP1", package: "swift-nio"),
                 .product(name: "NIOTransportServices", package: "swift-nio-transport-services"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ],
-            resources: [
-                .copy("Resources")
             ]
         ),
 

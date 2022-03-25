@@ -155,25 +155,11 @@ private final class HTTP1ServerHandler: ChannelInboundHandler {
             return
         }
 
-        if headData.uri == "/" {
-            writeIndexHTML(to: context)
-        }
         if headData.uri.contains("playlist") {
             writePlaylist(to: context)
         }
         if headData.uri.contains("segment") {
             writeSegment(from: headData.uri, to: context)
-        }
-    }
-
-    private func writeIndexHTML(to context: ChannelHandlerContext) {
-        let indexFileURL = Bundle.module.url(forResource: "index", withExtension: "html")
-        let indexFileContentType = "text/html; charset=utf-8"
-
-        if let indexFileURL = indexFileURL {
-            write(dataAt: indexFileURL, with: indexFileContentType, to: context)
-        } else {
-            writeNotFound(to: context)
         }
     }
 
