@@ -41,7 +41,7 @@ extension HLS {
             writer.initialSegmentStartTime = CMTime.zero
 
             var channelLayout = AudioChannelLayout.init()
-            channelLayout.mChannelLayoutTag = kAudioChannelLayoutTag_MPEG_1_0
+            channelLayout.mChannelLayoutTag = kAudioChannelLayoutTag_MPEG_2_0
             let audioOutputSettings: [String: Any] = [
                 AVFormatIDKey: kAudioFormatMPEG4AAC,
                 AVSampleRateKey: 44100,
