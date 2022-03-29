@@ -14,7 +14,7 @@ public struct ServerConfig {
 
 public extension ServerConfig {
     static let `default`: Self = .init(
-        videoWidth: 1125,
-        videoHeight: 2436
+        videoWidth: 1920,
+        videoHeight: 1080
     )
 }

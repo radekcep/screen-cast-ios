@@ -132,7 +132,7 @@ extension StreamClient {
                 .eraseToEffect()
             },
             writeBuffer: {
-                writer?.writeBuffer(sampleBuffer: $0, sampleBufferType: $1)
+                writer?.writeBuffer($0, ofType: $1)
             }
         )
     }
