@@ -82,7 +82,7 @@ extension HLS {
                 writeBuffer(sampleBuffer, with: &videoOffset, into: videoInput)
             }
 
-            if sampleBufferType == .audioApp || sampleBufferType == .audioMic {
+            if sampleBufferType == .audioApp {
                 writeBuffer(sampleBuffer, with: &audioOffset, into: audioInput)
             }
         }
