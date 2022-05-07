@@ -1,5 +1,5 @@
 //
-//  StreamClientHLS.swift
+//  StreamClient+hls.swift
 //  
 //
 //  Created by Radek Čep on 19.01.2022.
