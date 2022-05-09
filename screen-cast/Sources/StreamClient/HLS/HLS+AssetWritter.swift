@@ -18,10 +18,10 @@ extension HLS {
         private let writer: AVAssetWriter
         private let audioInput: AVAssetWriterInput
         private let videoInput: AVAssetWriterInput
+        private let frameRateStabiliser: CMSampleBuffer.FrameRateStabiliser
         private let outputData: OutputDataCallback
 
-        private var audioOffset: CMTime?
-        private var videoOffset: CMTime?
+        private var initialPresentationTimeStamp: CMTime?
 
         init(
             videoWidth: Int,
@@ -61,16 +61,30 @@ extension HLS {
             videoInput.expectsMediaDataInRealTime = true
             writer.add(videoInput)
 
+            frameRateStabiliser = .init()
             self.outputData = outputData
+
             super.init()
+
+            frameRateStabiliser.output = { [weak self] sampleBuffer in
+                guard let self = self else { return }
+                self.writeBuffer(sampleBuffer, into: self.videoInput)
+            }
 
             writer.delegate = self
         }
 
         func writeBuffer(_ sampleBuffer: CMSampleBuffer, ofType sampleBufferType: RPSampleBufferType) {
+            initialPresentationTimeStamp = initialPresentationTimeStamp
+                ?? CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+
+            guard let initialPresentationTimeStamp = initialPresentationTimeStamp else {
+                return
+            }
+
             if writer.status == .unknown {
                 writer.startWriting()
-                writer.startSession(atSourceTime: CMTime.zero)
+                writer.startSession(atSourceTime: initialPresentationTimeStamp)
             }
 
             guard writer.status == .writing else {
@@ -79,11 +93,11 @@ extension HLS {
 
             if sampleBufferType == .video {
                 let sampleBuffer = sampleBuffer.withCorrectedOrientation(in: ciContext)
-                writeBuffer(sampleBuffer, with: &videoOffset, into: videoInput)
+                frameRateStabiliser.writeBuffer(sampleBuffer)
             }
 
             if sampleBufferType == .audioApp {
-                writeBuffer(sampleBuffer, with: &audioOffset, into: audioInput)
+                writeBuffer(sampleBuffer, into: audioInput)
             }
         }
     }
@@ -101,20 +115,11 @@ extension HLS.AssetWritter: AVAssetWriterDelegate {
 }
 
 private extension HLS.AssetWritter {
-    func writeBuffer(_ sampleBuffer: CMSampleBuffer, with offset: inout CMTime?, into assetWriterInput: AVAssetWriterInput) {
-        guard let offset = offset else {
-            offset = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-            return
-        }
-
+    func writeBuffer(_ sampleBuffer: CMSampleBuffer, into assetWriterInput: AVAssetWriterInput) {
         guard assetWriterInput.isReadyForMoreMediaData else {
             return
         }
 
-        guard let bufferCopy = sampleBuffer.withTimeShiftedBackBy(offset: offset) else {
-            return
-        }
-
-        assetWriterInput.append(bufferCopy)
+        assetWriterInput.append(sampleBuffer)
     }
 }
