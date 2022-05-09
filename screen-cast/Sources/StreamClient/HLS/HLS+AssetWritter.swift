@@ -37,7 +37,7 @@ extension HLS {
             let fileType = UTType(AVFileType.mp4.rawValue)!
             writer = AVAssetWriter(contentType: fileType)
             writer.outputFileTypeProfile = .mpeg4AppleHLS
-            writer.preferredOutputSegmentInterval = CMTime(seconds: 1, preferredTimescale: 1)
+            writer.preferredOutputSegmentInterval = CMTimeMake(value: 1, timescale: 2)
             writer.initialSegmentStartTime = CMTime.zero
 
             var channelLayout = AudioChannelLayout.init()
